@@ -31,25 +31,25 @@
                                         <div class="form-group">
                                             <label for="chaveprivada">Chave Privada</label>
                                             <textarea name="chaveprivada" class="form-control" id="chaveprivada"
-                                                rows="3"></textarea>
+                                                rows="3" required>{{chaveprivada}}</textarea>
                                         </div>
                                         <div class="form-group">
                                             <label for="chavepublica">Chave Pública</label>
                                             <textarea name="chavepublica" class="form-control" id="chavepublica"
-                                                rows="3"></textarea>
+                                                rows="3" required>{{chavepublica}}</textarea>
                                         </div>
                                         <button class="btn btn-primary mb-3" type="button" onclick="gerarChaves()">Gerar Chaves</button>
-                                        <a id="baixarchaveprivada" class="btn btn-primary mb-3" download="chaveprivada.txt" hidden>Baixar Chave Privada</a>
-                                        <a id="baixarchavepublica" class="btn btn-primary mb-3" download="chavepublica.txt" hidden>Baixar Chave Pública</a>
+                                        <a id="baixarchaveprivada" class="btn btn-primary mb-3" download="chavePrivada.txt" hidden>Baixar Chave Privada</a>
+                                        <a id="baixarchavepublica" class="btn btn-primary mb-3" download="chavePublica.txt" hidden>Baixar Chave Pública</a>
                                         <p>O que você deseja assinar?</p>
                                         <div class="custom-control custom-radio custom-control-inline mb-3">
                                             <input type="radio" id="assinartexto" name="tipoassinatura"
-                                                class="custom-control-input" onclick="tipoAssinatura('texto')" value="texto">
+                                                class="custom-control-input" onclick="tipoAssinatura('texto')" value="texto" required>
                                             <label class="custom-control-label" for="assinartexto">Texto</label>
                                         </div>
                                         <div class="custom-control custom-radio custom-control-inline mb-3">
                                             <input type="radio" id="assinararquivo" name="tipoassinatura"
-                                                class="custom-control-input" onclick="tipoAssinatura('arquivo')" value="arquivo">
+                                                class="custom-control-input" onclick="tipoAssinatura('arquivo')" value="arquivo" required>
                                             <label class="custom-control-label" for="assinararquivo">Arquivo</label>
                                         </div>
                                         <div class="form-group" hidden>
@@ -60,18 +60,20 @@
                                             <input name="arquivo" type="file" class="custom-file-input" id="arquivo">
                                             <label class="custom-file-label" for="arquivo">Escolha o arquivo</label>
                                         </div>
-                                        <p>{{sucesso}}</p>
-                                        {% if mensagemassinada %}
-                                        <div class="form-group">
-                                            <label for="mensagemassinada">Mensagem Assinada</label>
-                                            <textarea name="mensagemassinada" class="form-control" id="mensagemassinada"
-                                                rows="3">{{mensagemassinada}}</textarea>
-                                        </div>
+                                        {% if sucesso == True %}
+                                            <script>alert('Mensagem assinada com sucesso.')</script>
+                                            <div class="form-group">
+                                                <label for="mensagemassinada">Mensagem Assinada</label>
+                                                <textarea name="mensagemassinada" class="form-control" id="mensagemassinada"
+                                                    rows="3">{{mensagemassinada}}</textarea>
+                                            </div>
+                                            <a id="baixarmensagemassinada" class="btn btn-primary mb-3" download="mensagemAssinada.txt" href="data:text/plain;utf-8,{{mensagemassinada}}">Baixar Mensagem Assinada</a>
+                                        {% elif sucesso == False %}
+                                            <script>alert('Não foi possível assinar a mensagem. Por favor, tente novamente.')</script>
                                         {% endif %}
                                         <div class="form-group mt-4 mb-0">
                                             <button class="btn btn-primary btn-block" type="submit">Assinar Mensagem</button>
                                         </div>
-                                        <!--onclick="assinarMensagem()"-->
                                     </form>
                                 </div>
                                 <div class="card-footer text-center">
@@ -141,10 +143,6 @@
                     document.getElementById("arquivo").parentElement.hidden = false;
                 }
             }
-        }
-        function assinarMensagem() {
-            document.getElementById("mensagemassinada").parentElement.hidden = false;
-            alert("Mensagem assinada com sucesso!");
         }
     </script>
 </body>

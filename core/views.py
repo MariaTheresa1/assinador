@@ -22,23 +22,23 @@ def gerar_chaves(request):
 
 @csrf_protect
 def assinar_mensagem(request):
-        ##try:
+    try:
         print(request.POST)
-        chavepublica = bytes.fromhex(request.POST.get("chavepublica"))
+        chaveprivada = bytes.fromhex(request.POST.get("chaveprivada"))
         tipoassinatura= request.POST.get("tipoassinatura")
         if(tipoassinatura=="texto"):
             mensagem = str.encode(request.POST.get("texto"))
         else:
             mensagem = request.FILES.get("arquivo").read()
         
-        print(chavepublica)
-        chave = RSA.import_key(chavepublica)
+        print(chaveprivada)
+        chave = RSA.import_key(chaveprivada)
         h = SHA256.new(mensagem)
         assinatura = pkcs1_15.new(chave).sign(h)
         mensagem_assinada = assinatura.hex()
 
-        return render(request,"assinador.html",{'sucesso':True, 'mensagemassinada':mensagem_assinada})
-        #except:
+        return render(request,"assinador.html",{'sucesso':True, 'chaveprivada': request.POST.get("chaveprivada"), 'chavepublica': request.POST.get("chavepublica"), 'mensagemassinada':mensagem_assinada})
+    except:
         return render(request,"assinador.html",{'sucesso':False})
 
 
