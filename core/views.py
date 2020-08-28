@@ -43,33 +43,36 @@ def assinar_mensagem(request):
 
 @csrf_protect
 def verificar_assinatura(request):
-    try:
+        #try:
         print(request.POST)
         chavepublica = bytes.fromhex(request.POST.get("chavepublica"))
 
+        tipocertificado= request.POST.get("tipocertificado")
         tipomensagemclaro= request.POST.get("tipomensagemclaro")
         tipomensagem= request.POST.get("tipomensagem")
 
-        if(tipomensagemclaro=="texto"):
-            mensagem = str.encode(request.POST.get("tipomensagemclarotexto"))
+        if(tipocertificado=="certificadotexto"):
+            chavepublica = str.encode(request.POST.get("tipocertificadotexto"))
         else:
-            mensagem = request.FILES.get("tipomensagemclaroarquivo").read()
+            chavepublica = request.FILES.get("tipocertificadoarquivo").read()
 
-        if(tipomensagem=="texto"):
-            mensagem = str.encode(request.POST.get("tipomensagemtexto"))
+        if(tipomensagemclaro=="mensagemclarotexto"):
+            mensagemclaro = str.encode(request.POST.get("tipomensagemclarotexto"))
         else:
-            mensagem = request.FILES.get("tipomensagemarquivo").read()
+            mensagemclaro = request.FILES.get("tipomensagemclaroarquivo").read()
+
+        if(tipomensagem=="mensagemtexto"):
+            mensagemassinada = str.encode(request.POST.get("tipomensagemtexto"))
+        else:
+            mensagemassinada = request.FILES.get("tipomensagemarquivo").read()
         
-        pkcs1_15.new(chave).verify(h, signature)
-
         chave = RSA.import_key(chavepublica)
-        h = SHA256.new(mensagem)
-        assinatura = pkcs1_15.new(chave).sign(h)
-        mensagem_assinada = assinatura.hex()
+        h = SHA256.new(mensagemclaro)
+        pkcs1_15.new(chave).verify(h, mensagemassinada)
 
-        return render(request,"assinador.html",{'sucesso':True})
-    except:
-        return render(request,"assinador.html",{'sucesso':False})
+        return render(request,"verificador.html",{'sucesso':True})
+        #except:
+        return render(request,"verificador.html",{'sucesso':False})
 
 '''
 message = b'Hello, World!'
