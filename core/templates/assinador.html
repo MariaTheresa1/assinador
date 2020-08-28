@@ -26,7 +26,8 @@
                                     <h3 class="text-center font-weight-light my-4">Assinar Mensagem</h3>
                                 </div>
                                 <div class="card-body">
-                                    <form>
+                                    <form action="{% url 'assinar_mensagem' %}" method="POST" enctype="multipart/form-data">
+                                        {% csrf_token %}
                                         <div class="form-group">
                                             <label for="chaveprivada">Chave Privada</label>
                                             <textarea name="chaveprivada" class="form-control" id="chaveprivada"
@@ -38,16 +39,17 @@
                                                 rows="3"></textarea>
                                         </div>
                                         <button class="btn btn-primary mb-3" type="button" onclick="gerarChaves()">Gerar Chaves</button>
-                                        <button id="baixarchaves" class="btn btn-primary mb-3" type="button" onclick="baixarChaves()" hidden>Baixar Chaves</button>
+                                        <a id="baixarchaveprivada" class="btn btn-primary mb-3" download="chaveprivada.txt" hidden>Baixar Chave Privada</a>
+                                        <a id="baixarchavepublica" class="btn btn-primary mb-3" download="chavepublica.txt" hidden>Baixar Chave Pública</a>
                                         <p>O que você deseja assinar?</p>
                                         <div class="custom-control custom-radio custom-control-inline mb-3">
                                             <input type="radio" id="assinartexto" name="tipoassinatura"
-                                                class="custom-control-input" onclick="tipoAssinatura('texto')">
+                                                class="custom-control-input" onclick="tipoAssinatura('texto')" value="texto">
                                             <label class="custom-control-label" for="assinartexto">Texto</label>
                                         </div>
                                         <div class="custom-control custom-radio custom-control-inline mb-3">
                                             <input type="radio" id="assinararquivo" name="tipoassinatura"
-                                                class="custom-control-input" onclick="tipoAssinatura('arquivo')">
+                                                class="custom-control-input" onclick="tipoAssinatura('arquivo')" value="arquivo">
                                             <label class="custom-control-label" for="assinararquivo">Arquivo</label>
                                         </div>
                                         <div class="form-group" hidden>
@@ -58,13 +60,18 @@
                                             <input name="arquivo" type="file" class="custom-file-input" id="arquivo">
                                             <label class="custom-file-label" for="arquivo">Escolha o arquivo</label>
                                         </div>
-                                        <div class="form-group" hidden>
+                                        <p>{{sucesso}}</p>
+                                        {% if mensagemassinada %}
+                                        <div class="form-group">
                                             <label for="mensagemassinada">Mensagem Assinada</label>
                                             <textarea name="mensagemassinada" class="form-control" id="mensagemassinada"
-                                                rows="3"></textarea>
+                                                rows="3">{{mensagemassinada}}</textarea>
                                         </div>
-                                        <div class="form-group mt-4 mb-0"><a class="btn btn-primary btn-block"
-                                                onclick="assinarMensagem()">Assinar Mensagem</a></div>
+                                        {% endif %}
+                                        <div class="form-group mt-4 mb-0">
+                                            <button class="btn btn-primary btn-block" type="submit">Assinar Mensagem</button>
+                                        </div>
+                                        <!--onclick="assinarMensagem()"-->
                                     </form>
                                 </div>
                                 <div class="card-footer text-center">
@@ -103,9 +110,17 @@
                     if (resultado.sucesso == true) {
                         document.getElementById('chaveprivada').innerText = resultado.chaveprivada;
                         document.getElementById('chavepublica').innerText = resultado.chavepublica;
+                        
+                        let chaveprivada = document.getElementById('chaveprivada').innerHTML;
+                        let chavepublica = document.getElementById('chavepublica').innerHTML;
 
-                        alert('Chaves geradas com sucesso!');
-                        document.getElementById('baixarchaves').hidden=false;
+                        document.getElementById('baixarchaveprivada').hidden=false;
+                        document.getElementById('baixarchavepublica').hidden=false;
+
+                        document.getElementById('baixarchaveprivada').setAttribute('href', `data:text/plain;utf-8,${chaveprivada}`);
+                        document.getElementById('baixarchavepublica').setAttribute('href', `data:text/plain;utf-8,${chavepublica}`); 
+
+                        alert('Chaves geradas com sucesso!');                        
                     }
                     else {
                         alert('Não foi possível gerar as chaves. Por favor, tente novamente.');
@@ -130,16 +145,6 @@
         function assinarMensagem() {
             document.getElementById("mensagemassinada").parentElement.hidden = false;
             alert("Mensagem assinada com sucesso!");
-        }
-        function baixarChaves() {
-            let chavepublica = document.getElementById('chavepublica').innerText;
-            let chaveprivada = document.getElementById('chaveprivada').innerText;
-            $.ajax({
-                url: `/baixar-chave-publica/1`,
-            });
-            $.ajax({
-                url: `/baixar-chave-privada/1`,
-            });
         }
     </script>
 </body>

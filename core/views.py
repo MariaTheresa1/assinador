@@ -3,6 +3,7 @@ from Crypto.Hash import SHA256
 from Crypto.PublicKey import RSA
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_protect
 
 def assinador(request):
     return render(request, "assinador.html", {})
@@ -19,21 +20,27 @@ def gerar_chaves(request):
     except:
         return JsonResponse({'sucesso':False}, safe= False)
 
-def baixar_chave_privada(request, chave):
-	filename = 'chave_privada.txt'
-	
-	response = HttpResponse(chave, content_type='text/plain')
-	response['Content-Disposition'] = 'attachment; filename={0}'.format(filename)
-	
-	return response
+@csrf_protect
+def assinar_mensagem(request):
+        ##try:
+        print(request.POST)
+        chavepublica = bytes.fromhex(request.POST.get("chavepublica"))
+        tipoassinatura= request.POST.get("tipoassinatura")
+        if(tipoassinatura=="texto"):
+            mensagem = str.encode(request.POST.get("texto"))
+        else:
+            mensagem = request.FILES.get("arquivo").read()
+        
+        print(chavepublica)
+        chave = RSA.import_key(chavepublica)
+        h = SHA256.new(mensagem)
+        assinatura = pkcs1_15.new(chave).sign(h)
+        mensagem_assinada = assinatura.hex()
 
-def baixar_chave_publica(request, chave):
-	filename = 'chave_publica.txt'
-	
-	response = HttpResponse(chave, content_type='text/plain')
-	response['Content-Disposition'] = 'attachment; filename={0}'.format(filename)
-	
-	return response
+        return render(request,"assinador.html",{'sucesso':True, 'mensagemassinada':mensagem_assinada})
+        #except:
+        return render(request,"assinador.html",{'sucesso':False})
+
 
 '''
 message = b'Hello, World!'
