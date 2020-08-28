@@ -28,7 +28,7 @@
                                         {% endif %}
                                         <form action="{% url 'verificar_assinatura' %}" method="POST" enctype="multipart/form-data">
                                             {% csrf_token %}
-                                            <p>Informe o certificado:</p>
+                                            <p>Informe a chave pública:</p>
                                             <div class="custom-control custom-radio custom-control-inline mb-3">
                                                 <input type="radio" id="certificadotexto" name="tipocertificado" class="custom-control-input" onclick="tipoCertificado('texto')" value="certificadotexto"> 
                                                 <label class="custom-control-label" for="certificadotexto">Texto</label>
@@ -41,7 +41,7 @@
                                                 <label for="tipocertificadotexto">Texto</label>
                                                 <textarea name="tipocertificadotexto" class="form-control" id="tipocertificadotexto" rows="3"></textarea>
                                             </div>
-                                            <div class="custom-file mb-3" hidden>
+                                            <div class="custom-file" hidden>
                                                 <input name="tipocertificadoarquivo" type="file" class="custom-file-input" id="tipocertificadoarquivo">
                                                 <label class="custom-file-label" for="tipocertificadoarquivo">Escolha o arquivo</label>
                                             </div>

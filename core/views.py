@@ -23,7 +23,6 @@ def gerar_chaves(request):
 @csrf_protect
 def assinar_mensagem(request):
     try:
-        print(request.POST)
         chaveprivada = bytes.fromhex(request.POST.get("chaveprivada"))
         tipoassinatura= request.POST.get("tipoassinatura")
         if(tipoassinatura=="texto"):
@@ -31,7 +30,6 @@ def assinar_mensagem(request):
         else:
             mensagem = request.FILES.get("arquivo").read()
         
-        print(chaveprivada)
         chave = RSA.import_key(chaveprivada)
         h = SHA256.new(mensagem)
         assinatura = pkcs1_15.new(chave).sign(h)
@@ -43,18 +41,17 @@ def assinar_mensagem(request):
 
 @csrf_protect
 def verificar_assinatura(request):
-        #try:
+    try:
         print(request.POST)
-        chavepublica = bytes.fromhex(request.POST.get("chavepublica"))
 
         tipocertificado= request.POST.get("tipocertificado")
         tipomensagemclaro= request.POST.get("tipomensagemclaro")
         tipomensagem= request.POST.get("tipomensagem")
 
         if(tipocertificado=="certificadotexto"):
-            chavepublica = str.encode(request.POST.get("tipocertificadotexto"))
+            chavepublica = bytes.fromhex(request.POST.get("tipocertificadotexto"))
         else:
-            chavepublica = request.FILES.get("tipocertificadoarquivo").read()
+            chavepublica = bytes.fromhex(request.FILES.get("tipocertificadoarquivo").read())
 
         if(tipomensagemclaro=="mensagemclarotexto"):
             mensagemclaro = str.encode(request.POST.get("tipomensagemclarotexto"))
@@ -62,37 +59,14 @@ def verificar_assinatura(request):
             mensagemclaro = request.FILES.get("tipomensagemclaroarquivo").read()
 
         if(tipomensagem=="mensagemtexto"):
-            mensagemassinada = str.encode(request.POST.get("tipomensagemtexto"))
+            mensagemassinada = bytes.fromhex(request.POST.get("tipomensagemtexto"))
         else:
-            mensagemassinada = request.FILES.get("tipomensagemarquivo").read()
-        
+            mensagemassinada = bytes.fromhex(request.FILES.get("tipomensagemarquivo").read())
+
         chave = RSA.import_key(chavepublica)
         h = SHA256.new(mensagemclaro)
         pkcs1_15.new(chave).verify(h, mensagemassinada)
 
         return render(request,"verificador.html",{'sucesso':True})
-        #except:
+    except (ValueError, TypeError):
         return render(request,"verificador.html",{'sucesso':False})
-
-'''
-message = b'Hello, World!'
-
-key = RSA.import_key(private_key)
-h = SHA256.new(message)
-signature = pkcs1_15.new(key).sign(h)
-#print(h)
-#print(signature.decode('utf-8', 'ignore'))
-#print(signature)
-#print(signature.hex())
-#print(bytes.fromhex(signature.hex())
-
-
-key = RSA.import_key(public_key)
-h = SHA256.new(message)
-
-try:
-    pkcs1_15.new(key).verify(h, signature)
-    print("A assinatura é válida.")
-except (ValueError, TypeError):
-    print("A assinatura não é válida.")
-    '''     
