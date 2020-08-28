@@ -41,6 +41,35 @@ def assinar_mensagem(request):
     except:
         return render(request,"assinador.html",{'sucesso':False})
 
+@csrf_protect
+def verificar_assinatura(request):
+    try:
+        print(request.POST)
+        chavepublica = bytes.fromhex(request.POST.get("chavepublica"))
+
+        tipomensagemclaro= request.POST.get("tipomensagemclaro")
+        tipomensagem= request.POST.get("tipomensagem")
+
+        if(tipomensagemclaro=="texto"):
+            mensagem = str.encode(request.POST.get("tipomensagemclarotexto"))
+        else:
+            mensagem = request.FILES.get("tipomensagemclaroarquivo").read()
+
+        if(tipomensagem=="texto"):
+            mensagem = str.encode(request.POST.get("tipomensagemtexto"))
+        else:
+            mensagem = request.FILES.get("tipomensagemarquivo").read()
+        
+        pkcs1_15.new(chave).verify(h, signature)
+
+        chave = RSA.import_key(chavepublica)
+        h = SHA256.new(mensagem)
+        assinatura = pkcs1_15.new(chave).sign(h)
+        mensagem_assinada = assinatura.hex()
+
+        return render(request,"assinador.html",{'sucesso':True})
+    except:
+        return render(request,"assinador.html",{'sucesso':False})
 
 '''
 message = b'Hello, World!'

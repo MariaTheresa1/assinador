@@ -21,7 +21,7 @@
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
                                     <div class="card-header"><h3 class="text-center font-weight-light my-4">Verificar Assinatura</h3></div>
                                     <div class="card-body">
-                                        <form>
+                                        <form action="{% url 'verificar_assinatura' %}" method="POST" enctype="multipart/form-data">
                                             <p>Informe o certificado:</p>
                                             <div class="custom-control custom-radio custom-control-inline mb-3">
                                                 <input type="radio" id="certificadotexto" name="tipocertificado" class="custom-control-input" onclick="tipoCertificado('texto')"> 
@@ -38,6 +38,23 @@
                                             <div class="custom-file mb-3" hidden>
                                                 <input name="tipocertificadoarquivo" type="file" class="custom-file-input" id="tipocertificadoarquivo">
                                                 <label class="custom-file-label" for="tipocertificadoarquivo">Escolha o arquivo</label>
+                                            </div>
+                                            <p>Informe a mensagem em claro:</p>
+                                            <div class="custom-control custom-radio custom-control-inline mb-3">
+                                                <input type="radio" id="mensagemclarotexto" name="tipomensagemclaro" class="custom-control-input" onclick="tipoMensagemClaro('texto')"> 
+                                                <label class="custom-control-label" for="mensagemclarotexto">Texto</label>
+                                            </div>
+                                            <div class="custom-control custom-radio custom-control-inline mb-3">
+                                                <input type="radio" id="mensagemclaroarquivo" name="tipomensagemclaro" class="custom-control-input" onclick="tipoMensagemClaro('arquivo')">
+                                                <label class="custom-control-label" for="mensagemclaroarquivo">Arquivo</label>
+                                            </div>
+                                            <div class="form-group" hidden>
+                                                <label for="tipomensagemclarotexto">Texto</label>
+                                                <textarea name="tipomensagemclarotexto" class="form-control" id="tipomensagemclarotexto" rows="3"></textarea>
+                                            </div>
+                                            <div class="custom-file" hidden>
+                                                <input name="tipomensagemclaroarquivo" type="file" class="custom-file-input" id="tipomensagemclaroarquivo">
+                                                <label class="custom-file-label" for="tipomensagemclaroarquivo">Escolha o arquivo</label>
                                             </div>
                                             <p>Informe a mensagem assinada:</p>
                                             <div class="custom-control custom-radio custom-control-inline mb-3">
@@ -56,7 +73,7 @@
                                                 <input name="tipomensagemarquivo" type="file" class="custom-file-input" id="tipomensagemarquivo">
                                                 <label class="custom-file-label" for="tipomensagemarquivo">Escolha o arquivo</label>
                                             </div>
-                                            <div class="form-group mt-4 mb-0"><a class="btn btn-primary btn-block" onclick="verificarAssinatura()">Verificar Assinatura</a></div>
+                                            <div class="form-group mt-4 mb-0"><button class="btn btn-primary btn-block" type="submit">Verificar Assinatura</button></div>
                                         </form>
                                     </div>
                                     <div class="card-footer text-center">
@@ -95,6 +112,17 @@
                     if(tipo=="arquivo"){
                         document.getElementById("tipocertificadotexto").parentElement.hidden=true;
                         document.getElementById("tipocertificadoarquivo").parentElement.hidden=false;
+                    }
+                }
+            }
+            function tipoMensagemClaro(tipo){
+                if(tipo=="texto"){
+                    document.getElementById("tipomensagemclarotexto").parentElement.hidden=false;
+                    document.getElementById("tipomensagemclaroarquivo").parentElement.hidden=true;
+                }else{
+                    if(tipo=="arquivo"){
+                        document.getElementById("tipomensagemclarotexto").parentElement.hidden=true;
+                        document.getElementById("tipomensagemclaroarquivo").parentElement.hidden=false;
                     }
                 }
             }
