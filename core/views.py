@@ -42,8 +42,6 @@ def assinar_mensagem(request):
 @csrf_protect
 def verificar_assinatura(request):
     try:
-        print(request.POST)
-
         tipocertificado= request.POST.get("tipocertificado")
         tipomensagemclaro= request.POST.get("tipomensagemclaro")
         tipomensagem= request.POST.get("tipomensagem")
@@ -51,17 +49,33 @@ def verificar_assinatura(request):
         if(tipocertificado=="certificadotexto"):
             chavepublica = bytes.fromhex(request.POST.get("tipocertificadotexto"))
         else:
-            chavepublica = bytes.fromhex(request.FILES.get("tipocertificadoarquivo").read())
+            arquivo = request.FILES['tipocertificadoarquivo']
+            chavepublica = ''
+
+            for linha in arquivo:
+                chavepublica = chavepublica + linha.decode()
+
+            chavepublica = bytes.fromhex(chavepublica)
 
         if(tipomensagemclaro=="mensagemclarotexto"):
             mensagemclaro = str.encode(request.POST.get("tipomensagemclarotexto"))
         else:
-            mensagemclaro = request.FILES.get("tipomensagemclaroarquivo").read()
+            arquivo = request.FILES['tipomensagemclaroarquivo']
+            mensagemclaro = ''
+
+            for linha in arquivo:
+                mensagemclaro = mensagemclaro + linha.decode()
 
         if(tipomensagem=="mensagemtexto"):
             mensagemassinada = bytes.fromhex(request.POST.get("tipomensagemtexto"))
         else:
-            mensagemassinada = bytes.fromhex(request.FILES.get("tipomensagemarquivo").read())
+            arquivo = request.FILES['tipomensagemarquivo']
+            mensagemassinada = ''
+
+            for linha in arquivo:
+                mensagemassinada = mensagemassinada + linha.decode()
+
+            mensagemassinada = bytes.fromhex(mensagemassinada)
 
         chave = RSA.import_key(chavepublica)
         h = SHA256.new(mensagemclaro)

@@ -30,45 +30,45 @@
                                             {% csrf_token %}
                                             <p>Informe a chave pública:</p>
                                             <div class="custom-control custom-radio custom-control-inline mb-3">
-                                                <input type="radio" id="certificadotexto" name="tipocertificado" class="custom-control-input" onclick="tipoCertificado('texto')" value="certificadotexto"> 
+                                                <input type="radio" id="certificadotexto" name="tipocertificado" class="custom-control-input" onclick="tipoCertificado('texto')" value="certificadotexto" required>
                                                 <label class="custom-control-label" for="certificadotexto">Texto</label>
                                             </div>
                                             <div class="custom-control custom-radio custom-control-inline mb-3">
-                                                <input type="radio" id="certificadoarquivo" name="tipocertificado" class="custom-control-input" onclick="tipoCertificado('arquivo')" value="certificadoarquivo">
+                                                <input type="radio" id="certificadoarquivo" name="tipocertificado" class="custom-control-input" onclick="tipoCertificado('arquivo')" value="certificadoarquivo" required>
                                                 <label class="custom-control-label" for="certificadoarquivo">Arquivo</label>
                                             </div>
                                             <div class="form-group" hidden>
                                                 <label for="tipocertificadotexto">Texto</label>
                                                 <textarea name="tipocertificadotexto" class="form-control" id="tipocertificadotexto" rows="3"></textarea>
                                             </div>
-                                            <div class="custom-file" hidden>
+                                            <div class="custom-file mb-3" hidden>
                                                 <input name="tipocertificadoarquivo" type="file" class="custom-file-input" id="tipocertificadoarquivo">
                                                 <label class="custom-file-label" for="tipocertificadoarquivo">Escolha o arquivo</label>
                                             </div>
                                             <p>Informe a mensagem em claro:</p>
                                             <div class="custom-control custom-radio custom-control-inline mb-3">
-                                                <input type="radio" id="mensagemclarotexto" name="tipomensagemclaro" class="custom-control-input" onclick="tipoMensagemClaro('texto')" value="mensagemclarotexto"> 
+                                                <input type="radio" id="mensagemclarotexto" name="tipomensagemclaro" class="custom-control-input" onclick="tipoMensagemClaro('texto')" value="mensagemclarotexto" required>
                                                 <label class="custom-control-label" for="mensagemclarotexto">Texto</label>
                                             </div>
                                             <div class="custom-control custom-radio custom-control-inline mb-3">
-                                                <input type="radio" id="mensagemclaroarquivo" name="tipomensagemclaro" class="custom-control-input" onclick="tipoMensagemClaro('arquivo')" value="mensagemclaroarquivo">
+                                                <input type="radio" id="mensagemclaroarquivo" name="tipomensagemclaro" class="custom-control-input" onclick="tipoMensagemClaro('arquivo')" value="mensagemclaroarquivo" required>
                                                 <label class="custom-control-label" for="mensagemclaroarquivo">Arquivo</label>
                                             </div>
                                             <div class="form-group" hidden>
                                                 <label for="tipomensagemclarotexto">Texto</label>
                                                 <textarea name="tipomensagemclarotexto" class="form-control" id="tipomensagemclarotexto" rows="3"></textarea>
                                             </div>
-                                            <div class="custom-file" hidden>
+                                            <div class="custom-file mb-3" hidden>
                                                 <input name="tipomensagemclaroarquivo" type="file" class="custom-file-input" id="tipomensagemclaroarquivo">
                                                 <label class="custom-file-label" for="tipomensagemclaroarquivo">Escolha o arquivo</label>
                                             </div>
                                             <p>Informe a mensagem assinada:</p>
                                             <div class="custom-control custom-radio custom-control-inline mb-3">
-                                                <input type="radio" id="mensagemtexto" name="tipomensagem" class="custom-control-input" onclick="tipoMensagem('texto')" value="mensagemtexto"> 
+                                                <input type="radio" id="mensagemtexto" name="tipomensagem" class="custom-control-input" onclick="tipoMensagem('texto')" value="mensagemtexto" required>
                                                 <label class="custom-control-label" for="mensagemtexto">Texto</label>
                                             </div>
                                             <div class="custom-control custom-radio custom-control-inline mb-3">
-                                                <input type="radio" id="mensagemarquivo" name="tipomensagem" class="custom-control-input" onclick="tipoMensagem('arquivo')" value="mensagemarquivo">
+                                                <input type="radio" id="mensagemarquivo" name="tipomensagem" class="custom-control-input" onclick="tipoMensagem('arquivo')" value="mensagemarquivo" required>
                                                 <label class="custom-control-label" for="mensagemarquivo">Arquivo</label>
                                             </div>
                                             <div class="form-group" hidden>
