@@ -16,6 +16,8 @@ def gerar_chaves(request):
         chave = RSA.generate(2048)
         chave_privada = chave.export_key().hex()
         chave_publica = chave.publickey().export_key().hex()
+        print(chave_privada)
+        print(chave_publica)
         return JsonResponse({'sucesso':True, 'chaveprivada': chave_privada, 'chavepublica': chave_publica}, safe= False)
     except:
         return JsonResponse({'sucesso':False}, safe= False)
@@ -34,6 +36,7 @@ def assinar_mensagem(request):
         h = SHA256.new(mensagem)
         assinatura = pkcs1_15.new(chave).sign(h)
         mensagem_assinada = assinatura.hex()
+        print(assinatura)
 
         return render(request,"assinador.html",{'sucesso':True, 'chaveprivada': request.POST.get("chaveprivada"), 'chavepublica': request.POST.get("chavepublica"), 'mensagemassinada':mensagem_assinada})
     except:
@@ -56,6 +59,7 @@ def verificar_assinatura(request):
                 chavepublica = chavepublica + linha.decode()
 
             chavepublica = bytes.fromhex(chavepublica)
+        print(chavepublica)
 
         if(tipomensagemclaro=="mensagemclarotexto"):
             mensagemclaro = str.encode(request.POST.get("tipomensagemclarotexto"))
@@ -65,6 +69,9 @@ def verificar_assinatura(request):
 
             for linha in arquivo:
                 mensagemclaro = mensagemclaro + linha.decode()
+
+            mensagemclaro = str.encode(mensagemclaro)
+        print(mensagemclaro)
 
         if(tipomensagem=="mensagemtexto"):
             mensagemassinada = bytes.fromhex(request.POST.get("tipomensagemtexto"))
@@ -76,6 +83,7 @@ def verificar_assinatura(request):
                 mensagemassinada = mensagemassinada + linha.decode()
 
             mensagemassinada = bytes.fromhex(mensagemassinada)
+        print(mensagemassinada)
 
         chave = RSA.import_key(chavepublica)
         h = SHA256.new(mensagemclaro)
